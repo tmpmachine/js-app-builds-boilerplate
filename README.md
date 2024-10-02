@@ -1,4 +1,4 @@
-# vanilla-project-builder
+# js-app-builds-boilerplate
 
 `src/app/src/build-version.json`
 
