@@ -6,11 +6,12 @@ import { minify } from 'uglify-js';
 import * as htmlMinifier from 'html-minifier';
 import * as fsExtra from 'fs-extra';
 
-let relativeBasePath = "app/src/";
+let appBuildPath = 'draw2canvas';
+let appSrcPath = appBuildPath+'/src';
 
 function minifyCSS(srcPath, outputDir) {
     const filename = Path.basename(srcPath);
-    const relativePath = Path.relative(relativeBasePath, srcPath);
+    const relativePath = Path.relative(appSrcPath, srcPath);
     const outputPath = Path.join(outputDir, relativePath);
     const outputDirPath = Path.dirname(outputPath);
 
@@ -42,8 +43,7 @@ function minifyCSS(srcPath, outputDir) {
 }
 
 function minifyHTML(srcPath, outputDir) {
-    const filename = Path.basename(srcPath);
-    const relativePath = Path.relative(relativeBasePath, srcPath);
+    const relativePath = Path.relative(appSrcPath, srcPath);
     const outputPath = Path.join(outputDir, relativePath);
     const outputDirPath = Path.dirname(outputPath);
 
@@ -69,7 +69,7 @@ function minifyHTML(srcPath, outputDir) {
 
 // Function to minify files
 function minifyFile(filePath, outputDir) {
-    const relativePath = Path.relative(relativeBasePath, filePath);
+    const relativePath = Path.relative(appSrcPath, filePath);
     const outputPath = Path.join(outputDir, relativePath);
     const outputDirPath = Path.dirname(outputPath);
 
@@ -83,6 +83,7 @@ function minifyFile(filePath, outputDir) {
         console.error(`Error minifying ${filePath}:`, result.error);
         return;
     }
+
     fs.writeFileSync(outputPath, result.code, 'utf8');
     console.log(`Minified ${filePath} -> ${outputPath}`);
 }
@@ -91,7 +92,7 @@ async function readBuildVersion() {
 
     return new Promise(resolve => {
         // Path to the version.json file
-        const versionFilePath = `app/src/build-version.json`;
+        const versionFilePath = appBuildPath+`/build-version.json`;
 
         // Read the version from the version.json file
         fs.readFile(versionFilePath, 'utf8', (err, data) => {
@@ -113,10 +114,10 @@ async function readBuildVersion() {
 
     await fsExtra.remove(outputDir)
 
-    const jsfiles = await glob('app/src/**/*.js', { ignore: '**/sw.js' })
-    const cssfiles = await glob('app/src/**/*.css')
-    const htmlfiles = await glob('app/src/**/*.html', { ignore: '.divless' })
-    const jsonfiles = await glob('app/src/**/*.json',  { ignore: ['**/build-version.json', '**/jsconfig.json'] })
+    const jsfiles = await glob(appSrcPath+'/**/*.js', { ignore: '**/sw.js' })
+    const cssfiles = await glob(appSrcPath+'/**/*.css')
+    const htmlfiles = await glob(appSrcPath+'/**/*.html', { ignore: '.divless' })
+    const jsonfiles = await glob(appSrcPath+'/**/*.json',  { ignore: ['**/build-version.json', '**/jsconfig.json'] })
 
     htmlfiles.forEach(filePath => {
         minifyHTML(filePath, outputDir);
@@ -131,7 +132,7 @@ async function readBuildVersion() {
     });
 
     jsonfiles.forEach(filePath => {
-        const relativePath = Path.relative("app/src/", filePath);
+        const relativePath = Path.relative(appSrcPath, filePath);
         const outputPath = Path.join(outputDir, relativePath);
         fsExtra.copySync(filePath, outputPath);
     });
