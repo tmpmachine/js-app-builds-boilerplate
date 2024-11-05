@@ -1,49 +1,91 @@
-# js-app-builds-boilerplate
+js-app-builds-boilerplate
+=========================
 
-`src/app/src/build-version.json`
+Project Setup
+-------------
+
+The project that you want to build must follow this structure:
 
 ```
-cd src/app
-git pull
-
-cd /
-npm run build
-
-firebase deploy
+src/
+  ...
+build-version.json
 ```
 
-- manage build files to copy `build.mjs`
-
-## Firebase Setup
-```
-npx firebase login
-npx firebase init
-npx firebase target:apply hosting hostingTarget siteName
-```
-`hostingTarget` see `firebase.json`.
-
-Setup hosting config in `firebase.json`.
-
-### Deploying
-```
-npm run deploy
-```
-
-## App
 Create a `build-version.json` in the app folder. This will determine the build folder name, e.g. `/builds/v1/`, `builds/v2`, etc.
+
+`build-version.json`
+
 ```json
 {
     "version": 1
 }
 ```
 
-# Running The App
-`node server`
+Building
+--------
 
-# Manage Caches
-- open `public/main-component.js`.
-- make sure `local.appCacheNamePrefix` value is the same as in `pwa-cacher.js` `cacheName` settings (without the build version postfix).
+1.  Clone the project repo to root.
+    
+2.  update project folder name in `build.mjs`.
+    
 
-# Sharing Assets
-- Create `public/assets/`.
-- Point all shared assets to this directory.
+```
+let appBuildPath = 'draftpost';
+```
+
+Then, to build and deploy the project:
+
+```
+pnpm i
+npm run build
+firebase deploy
+```
+
+### Dealing with Minifed Files
+
+Some files are already minifed. To speed up the build process, you may skip these files and copy them manually later on.
+
+`build.mjs`
+
+```js
+const jsfiles = await glob(appSrcPath+'/**/*.js', { ignore: '**/sw.js' })
+const cssfiles = await glob(appSrcPath+'/**/*.css')
+const htmlfiles = await glob(appSrcPath+'/**/*.html', { ignore: '.divless' })
+const jsonfiles = await glob(appSrcPath+'/**/*.json',  { ignore: ['**/build-version.json', '**/jsconfig.json'] })
+```
+
+Firebase Setup
+--------------
+
+```
+npx firebase login
+npx firebase init
+npx firebase target:apply hosting hostingTarget siteName
+```
+
+`hostingTarget` see `firebase.json`.
+
+Setup hosting config in `firebase.json`.
+
+Running The App
+===============
+
+```
+node server
+```
+
+Manage Caches
+=============
+
+*   open `public/main-component.js`.
+    
+*   make sure `local.appCacheNamePrefix` value is the same as in `pwa-cacher.js` `cacheName` settings (without the build version postfix).
+    
+
+Shared Assets
+=============
+
+*   Create `public/assets/`.
+    
+*   Point all shared assets to this directory.
