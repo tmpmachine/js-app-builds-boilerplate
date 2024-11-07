@@ -1,7 +1,8 @@
 {
 	"scripts": {
 		"deploy": "npx firebase deploy",
-		"build": "node build.mjs"
+		"build": "node build.mjs",
+		"pull": "git -C ./app pull & git -C ./app branch -r"
 	},
 	"devDependencies": {
 		"express": "^4.19.2",
