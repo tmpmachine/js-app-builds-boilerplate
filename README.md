@@ -16,7 +16,7 @@ Create a `build-version.json` in the app folder. This will determine the build f
 
 `build-version.json`
 
-```json
+```
 {
     "version": 1
 }
@@ -48,11 +48,19 @@ Some files are already minifed. To speed up the build process, you may skip thes
 
 `build.mjs`
 
-```js
+```
 const jsfiles = await glob(appSrcPath+'/**/*.js', { ignore: '**/sw.js' })
 const cssfiles = await glob(appSrcPath+'/**/*.css')
 const htmlfiles = await glob(appSrcPath+'/**/*.html', { ignore: '.divless' })
 const jsonfiles = await glob(appSrcPath+'/**/*.json',  { ignore: ['**/build-version.json', '**/jsconfig.json'] })
+```
+
+### Pull the Project Repository
+
+To pull and display the remote branches of the project repository, run:
+
+```
+npm run pull
 ```
 
 Firebase Setup
