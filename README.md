@@ -1,6 +1,8 @@
 js-app-builds-boilerplate
 =========================
 
+For source project setup, see [js-build-project-source-boilerplate](https://github.com/tmpmachine/js-build-project-source-boilerplate).
+
 Project Setup
 -------------
 
